@@ -30,18 +30,23 @@ Use `createServer` to create a server instance, passing it the options it needs 
 
 ```js
 import { createServer } from 'npm-http-server'
+import fs from 'fs';
 
 const server = createServer({
   registryURL: 'https://registry.npmjs.org',  // The URL of the npm registry, defaults to the public registry
   bowerBundle: '/bower.zip',                  // A special pathname for generating Bower bundles, defaults to "/bower.zip"
   redirectTTL: 60,                            // The time (in seconds) to cache 302 responses, defaults to 0
   autoIndex: true                             // Set false to disable generating index pages for directories
+  https: {                                    // If https is required, pass this with `key` and `cert` properties
+    key: fs.readFileSync('key.pem'),          // Your https certificate key
+    cert: fs.readFileSync('cert.pem')         // Your https certificate
+  }
 })
 
 server.listen(8080)
 ```
 
-`server` is a standard [node HTTP server](https://nodejs.org/api/http.html#http_class_http_server).
+`server` is a standard node [HTTP server](https://nodejs.org/api/http.html#http_class_http_server) / [HTTPS server](https://nodejs.org/api/https.html#https_class_https_server)
 
 If you'd like to use npm-http-server as part of a larger site, using e.g. a framework like [express](http://expressjs.com/), you can use the `createRequestHandler` function directly. As its name suggests, this function returns another function that can be used as the request handler in a standard node HTTP server. This function accepts the same options as `createServer`.
 
