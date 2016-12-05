@@ -1,4 +1,5 @@
 import http from 'http'
+import https from 'https'
 import { join as joinPaths } from 'path'
 import { stat as statFile, readFile } from 'fs'
 import { maxSatisfying as maxSatisfyingVersion } from 'semver'
@@ -278,7 +279,15 @@ export const createRequestHandler = (options = {}) => {
 /**
  * Creates and returns an HTTP server that serves files from NPM packages.
  */
-export const createServer = (options) =>
-  http.createServer(
+export const createServer = (options) => {
+  if (options.https) {
+    return https.createServer(
+      options.https,
+      createRequestHandler
+    )
+  }
+
+  return http.createServer(
     createRequestHandler(options)
   )
+}
