@@ -283,7 +283,7 @@ export const createServer = (options) => {
   if (options.https) {
     return https.createServer(
       options.https,
-      createRequestHandler
+      createRequestHandler(options)
     )
   }
 
